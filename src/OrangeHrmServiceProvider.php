@@ -2,24 +2,30 @@
 
 namespace GrantHolle\OrangeHrm;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-use GrantHolle\OrangeHrm\Commands\OrangeHrmCommand;
+use Illuminate\Support\ServiceProvider;
 
-class OrangeHrmServiceProvider extends PackageServiceProvider
+class OrangeHrmServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function register()
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
-        $package
-            ->name('orangehrm-api')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_orangehrm-api_table')
-            ->hasCommand(OrangeHrmCommand::class);
+        $this->mergeConfigFrom(__DIR__ . '/../config/orangehrm.php', 'orangehrm');
+    }
+
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/orangehrm.php' => config_path('orangehrm.php'),
+            ], 'orangehrm-config');
+        }
+
+        $this->app->bind(OrangeHrm::class, function ($app) {
+            ray(config('orangehrm'));
+            return new OrangeHrm(
+                config('orangehrm.base_url'),
+                config('orangehrm.client_id'),
+                config('orangehrm.client_secret')
+            );
+        });
     }
 }

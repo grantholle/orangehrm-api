@@ -11,6 +11,6 @@ class OrangeHrmFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'orangehrm-api';
+        return OrangeHrm::class;
     }
 }

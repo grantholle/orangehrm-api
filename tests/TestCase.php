@@ -2,21 +2,13 @@
 
 namespace GrantHolle\OrangeHrm\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use GrantHolle\OrangeHrm\OrangeHrm;
+use GrantHolle\OrangeHrm\OrangeHrmFacade;
 use Orchestra\Testbench\TestCase as Orchestra;
 use GrantHolle\OrangeHrm\OrangeHrmServiceProvider;
 
 class TestCase extends Orchestra
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'GrantHolle\\OrangeHrm\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-    }
-
     protected function getPackageProviders($app)
     {
         return [
@@ -26,11 +18,18 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        $app['config']->set('database.default', 'testing');
+        $app['config']->set('orangehrm', [
+            'base_url' => env('ORANGEHRM_BASE_URL'),
+            'client_id' => env('ORANGEHRM_CLIENT_ID'),
+            'client_secret' => env('ORANGEHRM_CLIENT_SECRET'),
+        ]);
+    }
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_orangehrm-api_table.php.stub';
-        $migration->up();
-        */
+    protected function getPackageAliases($app)
+    {
+        return [
+            OrangeHrm::class => OrangeHrmFacade::class,
+        ];
     }
 }
