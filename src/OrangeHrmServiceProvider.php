@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace GrantHolle\OrangeHrm;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use GrantHolle\OrangeHrm\Commands\OrangeHrmCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class OrangeHrmServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('orangehrm-api')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_skeleton_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasMigration('create_orangehrm-api_table')
+            ->hasCommand(OrangeHrmCommand::class);
     }
 }

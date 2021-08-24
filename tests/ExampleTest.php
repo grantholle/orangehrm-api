@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace GrantHolle\OrangeHrm\Tests;
 
 class ExampleTest extends TestCase
 {
