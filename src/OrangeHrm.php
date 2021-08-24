@@ -22,7 +22,6 @@ class OrangeHrm
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->accessToken = Cache::get(static::CACHE_KEY);
-        ray($this->accessToken);
     }
 
     public static function clearCache()
@@ -36,16 +35,16 @@ class OrangeHrm
             return;
         }
 
-        $response = $this->post('/oauth/issueToken', [
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'grant_type' => 'client_credentials',
-        ]);
+        $response = Http::baseUrl($this->url)
+            ->post('/oauth/issueToken', [
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret,
+                'grant_type' => 'client_credentials',
+            ]);
         $data = (object) $response->json();
 
         Cache::put(static::CACHE_KEY, $data->access_token, now()->addSeconds($data->expires_in));
         $this->accessToken = $data->access_token;
-        ray('Setting access token', $this->accessToken);
     }
 
     protected function http(): PendingRequest
@@ -56,7 +55,7 @@ class OrangeHrm
 
         return Http::baseUrl($this->url)
             ->withToken($this->accessToken)
-            ->withOptions(['debug' => true]);
+            ->withOptions(['debug' => false]);
     }
 
     public function get(string $endpoint, array $query = []): Response
@@ -72,6 +71,12 @@ class OrangeHrm
     public function post(string $endpoint, array $data = []): Response
     {
         return $this->http()->post($endpoint, $data);
+    }
+
+    public function getEmployees(array $parameters = []): array
+    {
+        return $this->get('/api/employees', $parameters)
+            ->json();
     }
 
     public function getEmployee($id): array

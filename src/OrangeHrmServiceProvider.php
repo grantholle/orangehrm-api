@@ -20,7 +20,6 @@ class OrangeHrmServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(OrangeHrm::class, function ($app) {
-            ray(config('orangehrm'));
             return new OrangeHrm(
                 config('orangehrm.base_url'),
                 config('orangehrm.client_id'),

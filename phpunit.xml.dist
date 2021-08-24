@@ -36,4 +36,9 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <php>
+        <env name="ORANGEHRM_BASE_URL" value="https://api-sandbox.orangehrm.com" />
+        <env name="ORANGEHRM_CLIENT_ID" value="api-client" />
+        <env name="ORANGEHRM_CLIENT_SECRET" value="942d36a36d6bf422a36f5871f905b6e5" />
+    </php>
 </phpunit>
