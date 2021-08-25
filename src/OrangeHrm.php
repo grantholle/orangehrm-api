@@ -109,4 +109,10 @@ class OrangeHrm
         return $this->get('/api/locations', $parameters)
             ->json();
     }
+
+    public function getEmploymentStatuses(array $parameters = []): array
+    {
+        return $this->get('/api/employmentStatus', $parameters)
+            ->json();
+    }
 }

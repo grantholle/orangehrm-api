@@ -147,4 +147,12 @@ class OrangeHrmTest extends TestCase
             $this->assertEquals($employee['data'][$field], $value);
         }
     }
+
+    public function test_can_get_employment_statuses()
+    {
+        $statuses = $this->orangeHrm->getEmploymentStatuses();
+
+        $this->assertArrayHasKey('data', $statuses);
+        $this->assertArrayHasKey('meta', $statuses);
+    }
 }
