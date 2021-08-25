@@ -5,7 +5,7 @@ namespace GrantHolle\OrangeHrm;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \GrantHolle\OrangeHrm\OrangeHrm
+ * @mixin OrangeHrm
  */
 class OrangeHrmFacade extends Facade
 {

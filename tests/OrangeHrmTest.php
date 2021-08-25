@@ -3,6 +3,7 @@
 namespace GrantHolle\OrangeHrm\Tests;
 
 use GrantHolle\OrangeHrm\OrangeHrm;
+use GrantHolle\OrangeHrm\OrangeHrmFacade;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 
@@ -22,6 +23,14 @@ class OrangeHrmTest extends TestCase
     public function test_service_container_injection_working_correctly()
     {
         $this->assertInstanceOf(OrangeHrm::class, $this->orangeHrm);
+    }
+
+    public function test_facade_is_correct_instance()
+    {
+        $employees = OrangeHrmFacade::getEmployees();
+
+        $this->assertArrayHasKey('data', $employees);
+        $this->assertArrayHasKey('meta', $employees);
     }
 
     public function test_can_list_employees()
