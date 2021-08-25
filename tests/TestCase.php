@@ -2,8 +2,8 @@
 
 namespace GrantHolle\OrangeHrm\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use GrantHolle\OrangeHrm\OrangeHrmServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

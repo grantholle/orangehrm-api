@@ -13,7 +13,7 @@ class OrangeHrm
     protected string $clientId;
     protected string $clientSecret;
     protected ?string $accessToken;
-    const CACHE_KEY = 'orangehrm_access_token';
+    public const CACHE_KEY = 'orangehrm_access_token';
 
     public function __construct(string $url, string $clientId, string $clientSecret)
     {
@@ -30,7 +30,7 @@ class OrangeHrm
 
     protected function setAccessToken(bool $force = false): void
     {
-        if (!$force && $this->accessToken) {
+        if (! $force && $this->accessToken) {
             return;
         }
 
@@ -48,7 +48,7 @@ class OrangeHrm
 
     protected function http(): PendingRequest
     {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             $this->setAccessToken(true);
         }
 
@@ -85,7 +85,7 @@ class OrangeHrm
         ])->json();
     }
 
-    public function getEmployeeCustomFields($id, ?string $screen = 'personal', ?string $module = 'pim'):? array
+    public function getEmployeeCustomFields($id, ?string $screen = 'personal', ?string $module = 'pim'): ?array
     {
         return $this->http()
             ->get("/api/employees/{$id}/CustomFieldValue?filter[screen]={$screen}&filter[screen][module]={$module}")
