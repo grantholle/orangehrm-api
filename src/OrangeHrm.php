@@ -30,7 +30,7 @@ class OrangeHrm
 
     protected function setAccessToken(bool $force = false): void
     {
-        if (! $force && $this->accessToken) {
+        if (!$force && $this->accessToken) {
             return;
         }
 
@@ -48,7 +48,7 @@ class OrangeHrm
 
     protected function http(): PendingRequest
     {
-        if (! $this->accessToken) {
+        if (!$this->accessToken) {
             $this->setAccessToken(true);
         }
 
