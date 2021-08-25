@@ -7,7 +7,7 @@
 
 ---
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+This is a very light client for the OrangeHRM API. It does not support all the capabilities of the API currently and is a work in progress.
 
 ## Installation
 
@@ -20,21 +20,29 @@ composer require grantholle/orangehrm-api
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --provider="GrantHolle\OrangeHrm\OrangeHrmServiceProvider" --tag="orangehrm-api-config"
+php artisan vendor:publish --provider="GrantHolle\OrangeHrm\OrangeHrmServiceProvider" --tag="orangehrm-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
+    'base_url' => env('ORANGEHRM_BASE_URL'),
+    'client_id' => env('ORANGEHRM_CLIENT_ID'),
+    'client_secret' => env('ORANGEHRM_CLIENT_SECRET'),
 ];
 ```
 
+You should add the `ORANGEHRM_BASE_URL`, `ORANGEHRM_CLIENT_ID`, and `ORANGEHRM_CLIENT_SECRET` keys to your `.env` file. You can learn about how to create the api credentials in the [documentation](https://api.orangehrm.com/). 
+
 ## Usage
 
+There are a handful of methods implemented, including `addEmployee`, `getEmployee`, and `updateEmployee`.
+
 ```php
-$orangehrm = new GrantHolle\OrangeHrm();
-echo $orangehrm->echoPhrase('Hello, Spatie!');
+use GrantHolle\OrangeHrm\OrangeHrmFacade;
+
+$employees = OrangeHrmFacade::getEmployees();
 ```
 
 ## Testing
@@ -50,15 +58,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [Grant Holle](https://github.com/grantholle)
-- [All Contributors](../../contributors)
 
 ## License
 
