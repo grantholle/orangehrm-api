@@ -3,10 +3,13 @@
 namespace GrantHolle\OrangeHrm\Tests;
 
 use GrantHolle\OrangeHrm\OrangeHrm;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 
 class OrangeHrmTest extends TestCase
 {
+    use WithFaker;
+
     protected OrangeHrm $orangeHrm;
 
     protected function setUp(): void
@@ -50,5 +53,46 @@ class OrangeHrmTest extends TestCase
             'data.firstName',
             'data.lastName',
         ]));
+    }
+
+    public function test_can_add_employee()
+    {
+        $data = [
+            'firstName' => $this->faker->firstName,
+            'middleName' => '',
+            'lastName' => $this->faker->lastName,
+            'chkLogin' => true,
+            'userName' => $this->faker->userName,
+            'userPassword' => 'password123',
+            'rePassword' => 'password123',
+            'status' => 'Enabled',
+            'employeeId' => null,
+            'locationId' => 1,
+            'essRoleId' => 2,
+            'supervisorRoleId' => 3,
+            'photo' => [
+                'filename' => 'bob.jpeg',
+                'filesize' => filesize(__DIR__.'/bob.jpeg'),
+                'filetype' => 'image/jpeg',
+                'base64' => base64_encode(file_get_contents(__DIR__.'/bob.jpeg')),
+            ],
+        ];
+
+        $results = $this->orangeHrm->addEmployee($data);
+
+        $this->assertArrayHasKey('data', $results);
+        $this->assertTrue(Arr::has($results, 'messages.success'));
+
+        $this->assertNotNull($results['data']['empNumber']);
+        $this->assertEquals($data['firstName'], $results['data']['firstName']);
+        $this->assertEquals($data['lastName'], $results['data']['lastName']);
+    }
+
+    public function test_can_retrieve_locations()
+    {
+        $locations = $this->orangeHrm->getLocations();
+
+        $this->assertArrayHasKey('data', $locations);
+        $this->assertArrayHasKey('meta', $locations);
     }
 }

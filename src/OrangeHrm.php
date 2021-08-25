@@ -81,35 +81,33 @@ class OrangeHrm
 
     public function getEmployee($id): array
     {
-        $response = $this->get("/api/employees/{$id}", [
+        return $this->get("/api/employees/{$id}", [
             'include' => 'supervisors,subordinates,dependents,emergencyContacts,EmployeeImmigrationRecord,workExperience,education,skills,languages,EmployeeLicense,JobRecord,EmployeeTerminationRecord,SalaryRecord,SalaryHistoryRecord,EmployeeSalaryComponent,EmployeeMembership,DirectDepositRecord',
-        ]);
-
-        return $response->json();
+        ])->json();
     }
 
     public function getEmployeeCustomFields($id, string $screen = 'personal', string $module = 'pim'):? array
     {
-        $response = $this->http()
-            ->get("/api/employees/{$id}/CustomFieldValue?filter[screen]={$screen}&filter[screen][module]={$module}");
-
-        return $response->json();
+        return $this->http()
+            ->get("/api/employees/{$id}/CustomFieldValue?filter[screen]={$screen}&filter[screen][module]={$module}")
+            ->json();
     }
 
-    public function updateEmployee($id, array $data = []): bool
+    public function updateEmployee($id, array $data = []): array
     {
-        $response = $this->patch("/api/employees/{$id}", $data);
-        $successful = $response->successful();
-
-        Log::error("Failed updating employee: {$response->body()}");
-
-        return $successful;
+        return $this->patch("/api/employees/{$id}", $data)
+            ->json();
     }
 
-    public function addEmployee(array $data = []): bool
+    public function addEmployee(array $data = []): array
     {
-        $response = $this->post('/api/employees', $data);
+        return $this->post('/api/employees', $data)
+            ->json();
+    }
 
-        return $response->successful();
+    public function getLocations(array $parameters = [])
+    {
+        return $this->get('/api/locations', $parameters)
+            ->json();
     }
 }
