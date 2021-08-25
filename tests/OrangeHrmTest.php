@@ -105,4 +105,37 @@ class OrangeHrmTest extends TestCase
         $this->assertArrayHasKey('error', $results);
         $this->markAsRisky();
     }
+
+    public function test_can_update_existing_employee_data()
+    {
+        // Create a new employee
+        $data = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName,
+            'locationId' => 1,
+        ];
+
+        $results = $this->orangeHrm->addEmployee($data);
+        $this->assertTrue(Arr::has($results, 'data.empNumber'));
+
+        $update = [
+            'middleName' => $this->faker->firstName,
+            'nickName' => $this->faker->firstName,
+            'emp_work_email' => $this->faker->safeEmail,
+            'smoker' => 1,
+            'emp_birthday' => $this->faker->date(),
+            'emp_gender' => 3,
+            'emp_marital_status' => 'Other',
+            'emp_oth_email' => $this->faker->safeEmail,
+        ];
+
+        $updateResults = $this->orangeHrm->updateEmployee($results['data']['empNumber'], $update);
+        $this->assertEquals('Successfully Saved', $updateResults['messages']);
+
+        $employee = $this->orangeHrm->getEmployee($results['data']['empNumber']);
+
+        foreach ($update as $field => $value) {
+            $this->assertEquals($employee['data'][$field], $value);
+        }
+    }
 }

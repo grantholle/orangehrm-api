@@ -93,15 +93,15 @@ class OrangeHrm
             ->json();
     }
 
-    public function updateEmployee($id, array $data = []): array
-    {
-        return $this->patch("/api/employees/{$id}", $data)
-            ->json();
-    }
-
     public function addEmployee(array $data = []): array
     {
         return $this->post('/api/employees', $data)
+            ->json();
+    }
+
+    public function updateEmployee($id, array $data = []): array
+    {
+        return $this->patch("/api/employees/{$id}", $data)
             ->json();
     }
 
