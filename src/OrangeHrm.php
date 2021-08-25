@@ -104,7 +104,7 @@ class OrangeHrm
             ->json();
     }
 
-    public function getLocations(array $parameters = [])
+    public function getLocations(array $parameters = []): array
     {
         return $this->get('/api/locations', $parameters)
             ->json();
