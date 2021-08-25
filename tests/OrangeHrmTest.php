@@ -95,4 +95,14 @@ class OrangeHrmTest extends TestCase
         $this->assertArrayHasKey('data', $locations);
         $this->assertArrayHasKey('meta', $locations);
     }
+
+    public function test_can_get_custom_fields()
+    {
+        $results = $this->orangeHrm->getEmployeeCustomFields(1, 'contactDetails');
+
+        // The scope of these api credentials do not work
+        $this->assertIsArray($results);
+        $this->assertArrayHasKey('error', $results);
+        $this->markAsRisky();
+    }
 }

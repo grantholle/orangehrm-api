@@ -86,7 +86,7 @@ class OrangeHrm
         ])->json();
     }
 
-    public function getEmployeeCustomFields($id, string $screen = 'personal', string $module = 'pim'):? array
+    public function getEmployeeCustomFields($id, ?string $screen = 'personal', ?string $module = 'pim'):? array
     {
         return $this->http()
             ->get("/api/employees/{$id}/CustomFieldValue?filter[screen]={$screen}&filter[screen][module]={$module}")
