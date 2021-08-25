@@ -155,4 +155,30 @@ class OrangeHrmTest extends TestCase
         $this->assertArrayHasKey('data', $statuses);
         $this->assertArrayHasKey('meta', $statuses);
     }
+
+    public function test_can_get_job_titles()
+    {
+        $titles = $this->orangeHrm->getJobTitles();
+
+        $this->assertArrayHasKey('data', $titles);
+        $this->assertArrayHasKey('meta', $titles);
+    }
+
+    public function test_can_add_job_title()
+    {
+        $data = [
+            'jobTitleName' => $this->faker->jobTitle,
+            'jobDescription' => $this->faker->sentence,
+        ];
+
+        $results = $this->orangeHrm->addJobTitle($data);
+
+        $this->assertTrue(Arr::has($results, [
+            'data.id',
+            'data.jobTitleName',
+            'data.jobDescription',
+        ]));
+        $this->assertEquals($data['jobTitleName'], $results['data']['jobTitleName']);
+        $this->assertEquals($data['jobDescription'], $results['data']['jobDescription']);
+    }
 }

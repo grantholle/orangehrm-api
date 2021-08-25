@@ -115,4 +115,16 @@ class OrangeHrm
         return $this->get('/api/employmentStatus', $parameters)
             ->json();
     }
+
+    public function getJobTitles(array $parameters = []): array
+    {
+        return $this->get('/api/jobTitles', $parameters)
+            ->json();
+    }
+
+    public function addJobTitle(array $data): array
+    {
+        return $this->post('/api/jobTitles', $data)
+            ->json();
+    }
 }
