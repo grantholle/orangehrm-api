@@ -54,7 +54,7 @@ class OrangeHrm
 
         return Http::baseUrl($this->url)
             ->withToken($this->accessToken)
-            ->withOptions(['debug' => true]);
+            ->withOptions(['debug' => false]);
     }
 
     public function get(string $endpoint, array $query = []): Response
