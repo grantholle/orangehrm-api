@@ -186,10 +186,16 @@ class OrangeHrmTest extends TestCase
     {
         $results = $this->orangeHrm->getNationalities();
 
-        ray($results);
         $this->assertTrue(Arr::has($results, [
             'data',
             'meta',
         ]));
+    }
+
+    public function test_can_get_subunits()
+    {
+        $results = $this->orangeHrm->getSubunits(['tree' => 'true']);
+
+        $this->assertArrayHasKey('data', $results);
     }
 }

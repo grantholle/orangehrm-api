@@ -54,7 +54,7 @@ class OrangeHrm
 
         return Http::baseUrl($this->url)
             ->withToken($this->accessToken)
-            ->withOptions(['debug' => false]);
+            ->withOptions(['debug' => true]);
     }
 
     public function get(string $endpoint, array $query = []): Response
@@ -131,6 +131,12 @@ class OrangeHrm
     public function getNationalities(array $parameters = []): array
     {
         return $this->get('/api/nationality', $parameters)
+            ->json();
+    }
+
+    public function getSubunits(array $parameters = []): array
+    {
+        return $this->get('/api/subunits', $parameters)
             ->json();
     }
 }
