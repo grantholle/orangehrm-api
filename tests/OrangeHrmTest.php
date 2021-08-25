@@ -181,4 +181,15 @@ class OrangeHrmTest extends TestCase
         $this->assertEquals($data['jobTitleName'], $results['data']['jobTitleName']);
         $this->assertEquals($data['jobDescription'], $results['data']['jobDescription']);
     }
+
+    public function test_can_get_nationalities()
+    {
+        $results = $this->orangeHrm->getNationalities();
+
+        ray($results);
+        $this->assertTrue(Arr::has($results, [
+            'data',
+            'meta',
+        ]));
+    }
 }

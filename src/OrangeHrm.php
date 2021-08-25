@@ -127,4 +127,10 @@ class OrangeHrm
         return $this->post('/api/jobTitles', $data)
             ->json();
     }
+
+    public function getNationalities(array $parameters = []): array
+    {
+        return $this->get('/api/nationality', $parameters)
+            ->json();
+    }
 }
