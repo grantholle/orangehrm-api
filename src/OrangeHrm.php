@@ -67,8 +67,6 @@ class OrangeHrm
         /** @var Response $response */
         $response = $this->http()->$method($endpoint, $data);
 
-        ray($response->status(), $response->json());
-
         if ($response->status() === 401) {
             $error = $response->json();
 
