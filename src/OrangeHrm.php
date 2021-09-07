@@ -2,6 +2,7 @@
 
 namespace GrantHolle\OrangeHrm;
 
+use GrantHolle\OrangeHrm\Exceptions\OrangeHrmApiException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
@@ -14,6 +15,8 @@ class OrangeHrm
     protected string $clientSecret;
     protected ?string $accessToken;
     public const CACHE_KEY = 'orangehrm_access_token';
+
+    protected $authAttempts = 0;
 
     public function __construct(string $url, string $clientId, string $clientSecret)
     {
@@ -33,6 +36,8 @@ class OrangeHrm
         if (!$force && $this->accessToken) {
             return;
         }
+
+        $this->authAttempts++;
 
         $response = Http::baseUrl($this->url)
             ->post('/oauth/issueToken', [
@@ -57,86 +62,99 @@ class OrangeHrm
             ->withOptions(['debug' => false]);
     }
 
-    public function get(string $endpoint, array $query = []): Response
+    protected function makeRequest(string $method, string $endpoint, array $data): array
     {
-        return $this->http()->get($endpoint, $query);
+        /** @var Response $response */
+        $response = $this->http()->$method($endpoint, $data);
+
+        ray($response->status(), $response->json());
+
+        if ($response->status() === 401) {
+            $error = $response->json();
+
+            if (
+                $this->authAttempts < 5 &&
+                $error['error'] === 'invalid_token'
+            ) {
+                $this->setAccessToken(true);
+                return $this->makeRequest($method, $endpoint, $data);
+            }
+
+            throw new OrangeHrmApiException($error['error_description']);
+        }
+
+        return $response->json();
     }
 
-    public function patch(string $endpoint, array $data = []): Response
+    public function get(string $endpoint, array $query = []): array
     {
-        return $this->http()->patch($endpoint, $data);
+        return $this->makeRequest('get', $endpoint, $query);
     }
 
-    public function post(string $endpoint, array $data = []): Response
+    public function patch(string $endpoint, array $data = []): array
     {
-        return $this->http()->post($endpoint, $data);
+        return $this->makeRequest('patch', $endpoint, $data);
+    }
+
+    public function post(string $endpoint, array $data = []): array
+    {
+        return $this->makeRequest('post', $endpoint, $data);
     }
 
     public function getEmployees(array $parameters = []): array
     {
-        return $this->get('/api/employees', $parameters)
-            ->json();
+        return $this->get('/api/employees', $parameters);
     }
 
     public function getEmployee($id): array
     {
         return $this->get("/api/employees/{$id}", [
             'include' => 'supervisors,subordinates,dependents,emergencyContacts,EmployeeImmigrationRecord,workExperience,education,skills,languages,EmployeeLicense,JobRecord,EmployeeTerminationRecord,SalaryRecord,SalaryHistoryRecord,EmployeeSalaryComponent,EmployeeMembership,DirectDepositRecord',
-        ])->json();
+        ]);
     }
 
     public function getEmployeeCustomFields($id, ?string $screen = 'personal', ?string $module = 'pim'): ?array
     {
-        return $this->http()
-            ->get("/api/employees/{$id}/CustomFieldValue?filter[screen]={$screen}&filter[screen][module]={$module}")
-            ->json();
+        return $this->get("/api/employees/{$id}/CustomFieldValue?filter[screen]={$screen}&filter[screen][module]={$module}");
     }
 
     public function addEmployee(array $data = []): array
     {
-        return $this->post('/api/employees', $data)
-            ->json();
+        return $this->post('/api/employees', $data);
     }
 
     public function updateEmployee($id, array $data = []): array
     {
-        return $this->patch("/api/employees/{$id}", $data)
-            ->json();
+        return $this->patch("/api/employees/{$id}", $data);
     }
 
     public function getLocations(array $parameters = []): array
     {
-        return $this->get('/api/locations', $parameters)
-            ->json();
+        return $this->get('/api/locations', $parameters);
     }
 
     public function getEmploymentStatuses(array $parameters = []): array
     {
-        return $this->get('/api/employmentStatus', $parameters)
-            ->json();
+        return $this->get('/api/employmentStatus', $parameters);
     }
 
     public function getJobTitles(array $parameters = []): array
     {
-        return $this->get('/api/jobTitles', $parameters)
-            ->json();
+        return $this->get('/api/jobTitles', $parameters);
     }
 
     public function addJobTitle(array $data): array
     {
-        return $this->post('/api/jobTitles', $data)
-            ->json();
+        return $this->post('/api/jobTitles', $data);
     }
 
     public function getNationalities(array $parameters = []): array
     {
-        return $this->get('/api/nationality', $parameters)
-            ->json();
+        return $this->get('/api/nationality', $parameters);
     }
 
     public function getSubunits(array $parameters = []): array
     {
-        return $this->get('/api/subunits', $parameters)
-            ->json();
+        return $this->get('/api/subunits', $parameters);
     }
 }

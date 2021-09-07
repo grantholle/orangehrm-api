@@ -2,6 +2,7 @@
 
 namespace GrantHolle\OrangeHrm\Tests;
 
+use GrantHolle\OrangeHrm\Exceptions\OrangeHrmApiException;
 use GrantHolle\OrangeHrm\OrangeHrm;
 use GrantHolle\OrangeHrm\OrangeHrmFacade;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -107,11 +108,10 @@ class OrangeHrmTest extends TestCase
 
     public function test_can_get_custom_fields()
     {
-        $results = $this->orangeHrm->getEmployeeCustomFields(1, 'contactDetails');
+        $this->expectException(OrangeHrmApiException::class);
+        $this->orangeHrm->getEmployeeCustomFields(1, 'contactDetails');
 
         // The scope of these api credentials do not work
-        $this->assertIsArray($results);
-        $this->assertArrayHasKey('error', $results);
         $this->markAsRisky();
     }
 
