@@ -121,7 +121,7 @@ class OrangeHrm
         return $this->post('/api/employees', $data);
     }
 
-    public function updateEmployee($id, array $data = []): array
+    public function updateEmployee(string|int $id, array $data = []): array
     {
         return $this->patch("/api/employees/{$id}", $data);
     }
@@ -154,5 +154,10 @@ class OrangeHrm
     public function getSubunits(array $parameters = []): array
     {
         return $this->get('/api/subunits', $parameters);
+    }
+
+    public function updateJobRecord(string|int $empNumber, array $data): array
+    {
+        return $this->patch("/api/employees/{$empNumber}/job", $data);
     }
 }
