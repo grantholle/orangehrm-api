@@ -78,7 +78,7 @@ class OrangeHrm
                 return $this->makeRequest($method, $endpoint, $data);
             }
 
-            throw new OrangeHrmApiException($error['error_description']);
+            throw new OrangeHrmApiException("{$error['error']}: {$error['error_description']}");
         }
 
         return $response->json();
