@@ -72,7 +72,8 @@ class OrangeHrm
 
             if (
                 $this->authAttempts < 5 &&
-                $error['error'] === 'invalid_token'
+                $error['error'] === 'invalid_token' ||
+                $error['error'] === 'expired_token'
             ) {
                 $this->setAccessToken(true);
                 return $this->makeRequest($method, $endpoint, $data);
